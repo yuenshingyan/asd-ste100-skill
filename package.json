@@ -1,0 +1,11 @@
+{
+  "name": "pi-asd-ste100-skill",
+  "version": "0.4.0",
+  "description": "Simplified Technical English rewriting and structural linting for Pi.",
+  "license": "MIT",
+  "keywords": ["pi-package", "pi-skill", "asd-ste100", "simplified-technical-english"],
+  "files": ["SKILL.md", "references/", "examples/", "scripts/", "README.md", "LICENSE"],
+  "pi": {
+    "skills": ["./SKILL.md"]
+  }
+}

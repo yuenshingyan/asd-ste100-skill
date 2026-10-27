@@ -42,17 +42,21 @@ The last sentence branches on whether the conflict was resolved, not on what the
 > An error may have occurred while processing your request due to a possible mismatch in the expected data format, which could be caused by an outdated client version.
 
 **Violations flagged:**
-- One sentence carrying three separate claims (an error occurred, a format mismatch, a client version).
+- One sentence combining a possible error, a possible format mismatch, and a possible cause of that mismatch.
 - 28 words, over the descriptive cap.
 
 Not flagged: "may have occurred" and "could be caused by". The message is written by a system that does not know what went wrong. Both hedges are accurate reporting of that ignorance.
 
 **After:**
-> Your request may have failed. The cause may be a data format that does not match what the server expects. An outdated client can cause this mismatch. Check your client version.
+> An error may have occurred while processing your request. A mismatch with the expected data format may have caused the error. An outdated client version could have caused this mismatch.
+
+Kept as-is: Compound verb forms preserve uncertainty about past events.
 
 **This example is the reason the modality rule exists.** An earlier version of this file rewrote the first sentence as "The request failed", and the third as "an outdated client **is the most common cause**". Both read better. Both are wrong: the first asserts a failure the system only suspects, and the second invents a frequency claim that appears nowhere in the input. A rewrite that supplies a cause, a frequency, or a mechanism has stopped being a rewrite.
 
-Note also that "may have failed" keeps a compound verb form that the simple-tense rule would otherwise remove. **When the tense rule and the modality rule conflict, modality wins** — dropping the auxiliary here would delete the uncertainty along with the tense.
+The rewrite does not infer that the whole request failed, introduce a server, or add troubleshooting instructions. It preserves the possible causal links without presenting them as established facts.
+
+Note also that "may have occurred" keeps a compound verb form that the simple-tense rule would otherwise remove. **When the tense rule and the modality rule conflict, modality wins** — dropping the auxiliary here would delete the uncertainty along with the tense.
 
 ### Example C — Inter-agent instruction
 

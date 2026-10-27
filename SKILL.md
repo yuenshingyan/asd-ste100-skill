@@ -1,7 +1,10 @@
 ---
 name: asd-ste100
 description: "Use when English text must be parsed without a human to resolve ambiguity — tool descriptions, error messages, inter-agent instructions, system prompts, status reports — and misreading has a real cost, or when text reads as dense, hedged, or easy to misparse. Triggers: disambiguate, STE100 rewrite, apply Simplified Technical English, plain-language rewrite, controlled-language rewrite, rewrite so an agent cannot misread this. Not for creative or marketing copy."
-version: 0.4.0
+license: MIT
+compatibility: Pi with read and bash tools. Optional structural linter requires Python 3 (standard library only).
+metadata:
+  version: "0.4.0"
 ---
 
 # Simplified Technical English (ASD-STE100)
@@ -9,6 +12,18 @@ version: 0.4.0
 ASD-STE100 is a controlled-language standard built by the aerospace and defense industry (ASD, the AeroSpace and Defense Industries Association of Europe) to stop maintenance technicians from misreading English instructions. The standard removes the two biggest sources of misreading: words with more than one meaning, and sentences with more than one possible structure.
 
 This skill borrows that same discipline for a different reader: an **AI agent or a downstream system** that has to parse an English string — an error message, a tool description, an inter-agent instruction, a status report — without a human in the loop to resolve ambiguity. If a maintenance technician can misread "close the valve" as an adjective ("the valve that is near") instead of a command, so can a language model.
+
+## Pi Usage
+
+Invoke with `/skill:asd-ste100` followed by the text or a file path and your request. Use `read` to inspect input files and supporting references. Return the rewrite in the response unless the user asks you to edit a file.
+
+Resolve all relative resource paths against this skill's directory (the directory containing this `SKILL.md`), not the current working directory. Run the optional linter through `bash` with `python3` and the absolute script path:
+
+```bash
+python3 /absolute/path/to/asd-ste100-skill/scripts/ste-lint.py --json /absolute/path/to/input.md
+```
+
+Replace these example paths with the actual paths. No dependency installation is required. Exit code 1 means hard findings exceed the baseline, not that the linter failed to run. If Python 3 is unavailable, apply the checklist manually and do not claim a linter check was performed.
 
 ## When to Use This Skill
 
@@ -41,7 +56,7 @@ Instead, this skill applies the *underlying principle* (pick the plainest, most 
 
 STE's rules divide into two kinds, and this skill can only fully deliver one of them. **Structural rules** are self-contained: they describe sentence shape, and you can apply them from the description alone. **Lexical rules** are defined entirely by the official ~900-word dictionary, which this skill deliberately does not reproduce (see Source and Scope). Without that dictionary, the lexical rules degrade from a checkable standard into a preference for plain words.
 
-Apply the structural rules with confidence. Apply the lexical rules as a direction of travel, and say so in your output rather than implying dictionary compliance you cannot verify.
+Apply the structural rules with confidence. Apply the lexical rules as guidance. Never imply official dictionary compliance. If the user requests official STE compliance or approved vocabulary, add the scope caveat defined in Output Format. Routine rewrites do not need this caveat.
 
 ### Structural rules — apply these
 
@@ -99,7 +114,12 @@ These six habits cover most of what makes machine-written English hard to parse.
 
 **Default: the rewritten text, and nothing else.** Most callers want a result they can paste straight into a tool description, an error string, or a prompt. Print the simplified text on its own. Do not add a preamble about this skill, a mode announcement, a violation count, a summary of what changed, a rule table, or a closing offer to explain further.
 
-The one permitted addition: if step 4 kept a longer phrasing on purpose, add a single line after the text, prefixed `Kept as-is:`, naming the phrase and the precision that would have been lost. Omit the line when there is nothing to report.
+Two short notes are permitted after the rewritten text:
+
+- `Kept as-is:` Use one line when a necessary exception preserves meaning, including a longer phrase or a compound tense. Identify the retained wording or form and the information that changing it would lose. Combine multiple exceptions into this line.
+- `Scope:` Use one line only when the user requests official STE compliance or approved vocabulary. State that the rewrite follows structural guidance but official dictionary compliance has not been verified.
+
+Omit each note when its condition does not apply. These notes take precedence over the rewritten-text-only default.
 
 **On request: the rule table.** When the user asks to see the reasoning — "show the diff", "which rules did it break", "explain the changes", "before/after" — output this table instead:
 
@@ -112,7 +132,7 @@ The one permitted addition: if step 4 kept a longer phrasing on purpose, add a s
 Mode: Strict. 7 violations found.
 ```
 
-Follow the table with a one-line note on anything you deliberately did **not** simplify, and why (usually: simplifying would lose required precision).
+Follow the table with the same `Kept as-is:` and `Scope:` notes when their conditions apply. Omit notes that do not apply.
 
 ## Boundaries
 
